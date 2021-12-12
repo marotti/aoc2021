@@ -22,6 +22,20 @@ class BingoGame(val boards: List<BingoBoard>, val calledNumbers: List<Int>) {
     throw Exception("No winner found")
   }
 
+  fun findLastWinner(): BingoBoard {
+    val winningBoards = mutableListOf<BingoBoard>()
+    for (callNumber in calledNumbers) {
+      for (board in boards) {
+        if (board !in winningBoards) {
+          if (board.callNumber(callNumber).hasWon()) {
+            winningBoards.add(board)
+          }
+        }
+      }
+    }
+    return winningBoards.last()
+  }
+
   companion object {
     fun parseBoards(input: List<String>): List<BingoBoard> =
       input.filter { it.isNotBlank() }.windowed(5, 5) { board ->
@@ -41,16 +55,22 @@ fun main() {
     return winningBoard.getScore()
   }
 
-//  fun part2(input: List<String>): Int = input.size
+  fun part2(input: List<String>): Int {
+    val calledNumbers = BingoGame.getCalledNumbers(input.first())
+    val bingoBoards = BingoGame.parseBoards(input.drop(1))
+    val game = BingoGame(bingoBoards, calledNumbers)
+    val winningBoard = game.findLastWinner()
+    return winningBoard.getScore()
+  }
 
   // test if implementation meets criteria from the description, like:
   val testInput = readInput("Day04_test")
   println(part1(testInput))
   check(part1(testInput) == 4512)
-//  println(part2(testInput))
-//  check(part2(testInput) == 5)
+  println(part2(testInput))
+  check(part2(testInput) == 1924)
 
   val input = readInput("Day04")
   println(part1(input))
-//  println(part2(input))
+  println(part2(input))
 }
