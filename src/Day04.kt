@@ -1,6 +1,6 @@
-data class BingoBoard(val board: List<List<Int>>, var calledNumbers: List<Int> = mutableListOf()) {
+data class BingoBoard(val board: List<List<Int>>, val calledNumbers: MutableList<Int> = mutableListOf()) {
   fun callNumber(number: Int): BingoBoard {
-    calledNumbers.plus(number)
+    calledNumbers.add(number)
     return this
   }
 
@@ -14,10 +14,12 @@ data class BingoBoard(val board: List<List<Int>>, var calledNumbers: List<Int> =
 
 class BingoGame(val boards: List<BingoBoard>, val calledNumbers: List<Int>) {
   fun findWinner(): BingoBoard {
-    var winner: BingoBoard? = null
-    for (callNumber in calledNumbers)
-      winner = boards.find { board -> board.callNumber(callNumber).hasWon() }
-    return winner ?: throw Exception("No winner found")
+    for (callNumber in calledNumbers) {
+      for (board in boards) {
+        if (board.callNumber(callNumber).hasWon()) return board
+      }
+    }
+    throw Exception("No winner found")
   }
 
   companion object {
@@ -48,7 +50,7 @@ fun main() {
 //  println(part2(testInput))
 //  check(part2(testInput) == 5)
 
-//  val input = readInput("Day04")
-//  println(part1(input))
+  val input = readInput("Day04")
+  println(part1(input))
 //  println(part2(input))
 }
