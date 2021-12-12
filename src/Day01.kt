@@ -19,7 +19,7 @@ fun main() {
   println(part2(testInput))
   check(part2(testInput) == 5)
 
-  val input = readInput("Day01")
+  val input = readInput("day01")
   println(part1(input))
   println(part2(input))
 }
